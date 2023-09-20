@@ -20,7 +20,34 @@ public class Principal
 		Connection connection = DriverManager.getConnection(jdbcUrl);
 		while (true) {
 			Scanner scanner = new Scanner(System.in); // criar um objeto da classe Scanner
+			System.out.println("------------------------------");
+			System.out.println("BANCO DE DADOS HOTEL");
+			System.out.println("------------------------------");
+			System.out.println("[1] Clientes\n[2] Quartos\n[3] Reservas\n[4] Serviços" );
+			while (true) { 
+				int escolhatabela = scanner.nextInt();
+				if (escolhatabela == 1) {
+					System.out.println("TABELA CLIENTES");
+					System.out.println("------------------------------");
+					System.out.println("[1] Consultar Dados\n[2] Inserir Dados\n[3] Deletar Dados\n[4] Finalizar programa" );
+					int escolha = scanner.nextInt();
+					if (escolha == 1) {
+						consultarDadosclientes(connection);
+					} else if (escolha == 2) {
+						cadastrarDados(connection);
+					} else if (escolha == 3) {
+						deletarDados(connection);
+					} else if (escolha == 4) {
+						break ;
+					} else {
+						System.out.println("DIGITE UM VALOR VALIDO");
+					}
+
+			}
+			}
 			System.out.println("[1] Consultar Dados\n[2] Inserir Dados\n[3] Deletar Dados\n[4] Finalizar programa" );
+			System.out.println("------------------------------");
+
 			int escolha = scanner.nextInt();
 			if (escolha == 1) {
 				consultarDados(connection);
@@ -41,7 +68,7 @@ public class Principal
 		}
 }
 	
-	public static void consultarDados(Connection connection) {
+	public static void consultarDadosclientes(Connection connection) {
 	try {	
 		// 3 - definir a query SQL
 		String sql = "SELECT * from clientes";
