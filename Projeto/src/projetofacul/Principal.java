@@ -50,7 +50,6 @@ public class Principal
 
 			int escolha = scanner.nextInt();
 			if (escolha == 1) {
-				consultarDados(connection);
 			} else if (escolha == 2) {
 				cadastrarDados(connection);
 			} else if (escolha == 3) {
