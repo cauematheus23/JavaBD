@@ -6,10 +6,29 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Scanner;
+public class Clientes extends Principal{
 
-public class Clientes {
-
-
+	public static void testeInput() {
+	Scanner scanner = new Scanner(System.in); // criar um objeto da classe Scanner
+	int escolhatabela = scanner.nextInt();
+	if (escolhatabela == 1) {
+		System.out.println("TABELA CLIENTES");
+		System.out.println("------------------------------");
+		System.out.println("[1] Consultar Dados\n[2] Inserir Dados\n[3] Deletar Dados\n[4] Finalizar programa" );
+		int escolha = scanner.nextInt();
+		if (escolha == 1) {
+			Clientes.consultarDadosclientes(connection);
+		} else if (escolha == 2) {
+			Clientes.cadastrarDados(connection);
+		} else if (escolha == 3) {
+			Clientes.deletarDados(Principal.connection);
+		} else if (escolha == 4) {
+			
+		} else {
+			System.out.println("DIGITE UM VALOR VALIDO");
+		}
+		}
+	}
 
 public static void consultarDadosclientes(Connection connection) {
 	try {	

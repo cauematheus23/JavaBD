@@ -10,6 +10,8 @@ import java.util.Scanner;
 
 public class Principal 
 {
+	public static Connection connection;
+
 	public static void main(String[] args) {
 // 0 - adicionar o arquivo .jar	da biblioteca SQLite JDBC
 		// 1 - identificar qual que é o caminho do arquivo de banco de dados
