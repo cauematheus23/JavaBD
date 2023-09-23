@@ -8,104 +8,118 @@ import java.sql.Statement;
 import java.util.Scanner;
 
 public class Serviços {
-	public static void consultarDadosclientes(Connection connection) {
-		try {	
-			// 3 - definir a query SQL
-			String sql = "SELECT * from clientes";
-			// 4 - abrir a conexão com o banco de dados 
-			Statement statement = connection.createStatement();
-			// 5 - executar a query
-			ResultSet result = statement.executeQuery(sql);
-			// 6 - acessar e exibir o resultado
-			System.out.println("---------------------------");
-			System.out.println("| ID | NOME | Email | Telefone |");
-			System.out.println("---------------------------");
-			while(result.next()) 
-		{ String idclientes = result.getString("idclientes");
-				String nomecliente = result.getString("nomecliente");
-				String emailcliente = result.getString("emailcliente");
-				String telcliente = result.getString("telcliente");
 
+    public static void consultarDadosServiços(Connection connection) {
+        try {
+            String sql = "SELECT * FROM servicos";
+            Statement statement = connection.createStatement();
+            ResultSet result = statement.executeQuery(sql);
 
-			    System.out.printf("| %-4d | %-10s | %-15s | %-10s |\n", idclientes, nomecliente, emailcliente, telcliente);
-		}
-			System.out.println("----------------------");
+            System.out.println("-------------------------------------------------");
+            System.out.println("| ID | NOME DO SERVIÇO         | VALOR DO SERVIÇO |");
+            System.out.println("-------------------------------------------------");
 
-			}	catch (SQLException e) 
-				{	System.out.println("ERRO" + e);
-				e.printStackTrace();
-				}
-		
-		}
-		
-		public static void cadastrarDados(Connection connection) {
-			Scanner scanner = new Scanner(System.in); // criar um objeto da classe Scanner
-			System.out.println("Informe o ID(inteiro e unico) da pessoa que deseja inserir no bd:  ");
-			int idclientes = scanner.nextInt();
-			scanner.nextLine();
-			System.out.println("Informe o nome do cliente que deseja inserir no bd:  ");
-			String nomecliente = scanner.nextLine();
-			System.out.println("Informe o email do cliente que deseja inserir no bd:  ");
-			String emailcliente = scanner.nextLine();
-			System.out.println("Informe o Telefone do cliente que deseja inserir no bd:  ");
-			String telcliente = scanner.nextLine();
-			String sql = "INSERT INTO clientes (idclientes,nomecliente,emailcliente,telcliente) VALUES (?, ?, ?, ?)";
-			try {
-				PreparedStatement preparedStatement = connection.prepareStatement(sql);
-				preparedStatement.setInt(1,idclientes);
-				preparedStatement.setString(2, nomecliente);
-				preparedStatement.setString(3, emailcliente);
-				preparedStatement.setString(4, telcliente);
-				int rowsAffected = preparedStatement.executeUpdate();
-				if (rowsAffected > 0) {
-					System.out.println("Registro inserido com sucesso!");
-				} else {
-					System.out.println("Falha ao inserir o registro");
-				}
-			}catch (SQLException e) {
-				System.out.println("Erro ao inserir dados: " + e.getMessage());
-			}
-	}
-		public static void atualizarDados(Connection connection) {
-			Scanner scanner = new Scanner(System.in);
-			System.out.println("Digite o ID (inteiro) da pessoa que o nome vai ser atualizado: ");
-			int id = scanner.nextInt();
-			scanner.nextLine();
-			System.out.println("Digite o novo nome da pessoa: ");
-			String novonome = scanner.nextLine();
-			String sql = "UPDATE pessoas SET nome = ? WHERE id = ?";
-			try {
-				PreparedStatement preparedStatement = connection.prepareStatement(sql);
-				preparedStatement.setString(1, novonome);
-				preparedStatement.setInt(2, id);
-				int rowsAffected = preparedStatement.executeUpdate();
-				if(rowsAffected > 0) {
-					System.out.println("Registro atualizado com sucesso");
-				} else {
-					System.out.println("Nenhum registro foi atualizado. Verifique o ID informado.");
-				}
-			}	catch(SQLException e) {
-				System.out.println("Erro ao atualizar registro: " + e.getMessage());
-						
-			}
-			}
-		public static void deletarDados(Connection connection) {
-			Scanner scanner = new Scanner(System.in);
-			System.out.println("Digite o ID (inteiro) da pessoa que deseja deletar do banco: ");
-			int idcliente = scanner.nextInt();
-			String sql = "DELETE FROM clientes WHERE idclientes = ?";
-			try {
-				PreparedStatement preparedStatement = connection.prepareStatement(sql);
-				preparedStatement.setInt(1, idcliente);
-				int rowsAffected = preparedStatement.executeUpdate();
-				if(rowsAffected > 0) {
-					System.out.println("Registro deletado com sucesso");
-				} else {
-					System.out.println("Nenhum registro encontrado. Verifique o ID informado.");
-				}
-			}	catch(SQLException e) {
-				System.out.println("Erro ao deletar registro: " + e.getMessage());
-						
-			}
-			}
+            while (result.next()) {
+                int idServiço = result.getInt("idservico");
+                String nomeServiço = result.getString("nomeservico");
+                double valorServiço = result.getDouble("valorservico");
+
+                System.out.printf("| %-2d | %-23s | %-16.2f |\n", idServiço, nomeServiço, valorServiço);
+            }
+
+            System.out.println("-------------------------------------------------");
+        } catch (SQLException e) {
+            System.out.println("Erro: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    public static void cadastrarServiço(Connection connection) {
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.println("Informe o nome do serviço: ");
+        String nomeServiço = scanner.nextLine();
+
+        System.out.println("Informe o valor do serviço: ");
+        double valorServiço = scanner.nextDouble();
+
+        String sql = "INSERT INTO servicos (nomeservico, valorservico) VALUES (?, ?)";
+
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1, nomeServiço);
+            preparedStatement.setDouble(2, valorServiço);
+
+            int rowsAffected = preparedStatement.executeUpdate();
+
+            if (rowsAffected > 0) {
+                System.out.println("Serviço cadastrado com sucesso!");
+            } else {
+                System.out.println("Falha ao cadastrar o serviço.");
+            }
+        } catch (SQLException e) {
+            System.out.println("Erro ao cadastrar serviço: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    public static void atualizarServiço(Connection connection) {
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.println("Digite o ID do serviço que deseja atualizar: ");
+        int idServiço = scanner.nextInt();
+
+        scanner.nextLine(); // Consuma a quebra de linha
+
+        System.out.println("Informe o novo nome do serviço: ");
+        String novoNomeServiço = scanner.nextLine();
+
+        System.out.println("Informe o novo valor do serviço: ");
+        double novoValorServiço = scanner.nextDouble();
+
+        String sql = "UPDATE servicos SET nomeservico = ?, valorservico = ? WHERE idservico = ?";
+
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1, novoNomeServiço);
+            preparedStatement.setDouble(2, novoValorServiço);
+            preparedStatement.setInt(3, idServiço);
+
+            int rowsAffected = preparedStatement.executeUpdate();
+
+            if (rowsAffected > 0) {
+                System.out.println("Serviço atualizado com sucesso!");
+            } else {
+                System.out.println("Nenhum serviço foi atualizado. Verifique o ID informado.");
+            }
+        } catch (SQLException e) {
+            System.out.println("Erro ao atualizar serviço: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    public static void deletarServiço(Connection connection) {
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.println("Digite o ID do serviço que deseja deletar: ");
+        int idServiço = scanner.nextInt();
+
+        String sql = "DELETE FROM servicos WHERE idservico = ?";
+
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setInt(1, idServiço);
+
+            int rowsAffected = preparedStatement.executeUpdate();
+
+            if (rowsAffected > 0) {
+                System.out.println("Serviço deletado com sucesso!");
+            } else {
+                System.out.println("Nenhum serviço foi encontrado. Verifique o ID informado.");
+            }
+        } catch (SQLException e) {
+            System.out.println("Erro ao deletar serviço: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
 }

@@ -120,7 +120,7 @@ public class Principal {
         while (true) {
             System.out.println("TABELA RESERVAS");
             System.out.println("------------------------------");
-            System.out.println("[1] Consultar Reservas\n[2] Cadastrar Reserva\n[3] Atualizar Reserva\n[4] Remover Reserva\n[5] Calcular otal Reserva");
+            System.out.println("[1] Consultar Reservas\n[2] Cadastrar Reserva\n[3] Atualizar Reserva\n[4] Remover Reserva\n[5] Voltar");
             int escolha = scanner.nextInt();
 
             switch (escolha) {
@@ -148,6 +148,33 @@ public class Principal {
     
 
     public static void menuServicos(Connection connection) {
-        // Implemente o menu para a tabela "Serviços" aqui
+    	Scanner scanner = new Scanner(System.in);
+
+        while (true) {
+            System.out.println("TABELA SERVIÇOS");
+            System.out.println("------------------------------");
+            System.out.println("[1] Consultar Serviços\n[2] Cadastrar Serviço\n[3] Atualizar Serviço\n[4] Excluir Serviço\n[5] Voltar");
+            int escolha = scanner.nextInt();
+
+            switch (escolha) {
+                case 1:
+                    Serviços.consultarDadosServiços(connection);
+                    break;
+                case 2:
+                    Serviços.cadastrarServiço(connection);
+                    break;
+       
+                case 3:
+                	Serviços.atualizarServiço(connection);
+                    break;
+                case 4:
+                   	Serviços.deletarServiço(connection);
+                case 5:
+                	return;
+                default:
+                    System.out.println("Opção inválida. Tente novamente.");
+                    break;
+            }
+        }
     }
 }
