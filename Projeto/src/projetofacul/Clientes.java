@@ -6,29 +6,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Scanner;
-public class Clientes extends Principal{
 
-	public static void testeInput() {
-	Scanner scanner = new Scanner(System.in); // criar um objeto da classe Scanner
-	int escolhatabela = scanner.nextInt();
-	if (escolhatabela == 1) {
-		System.out.println("TABELA CLIENTES");
-		System.out.println("------------------------------");
-		System.out.println("[1] Consultar Dados\n[2] Inserir Dados\n[3] Deletar Dados\n[4] Finalizar programa" );
-		int escolha = scanner.nextInt();
-		if (escolha == 1) {
-			Clientes.consultarDadosclientes(connection);
-		} else if (escolha == 2) {
-			Clientes.cadastrarDados(connection);
-		} else if (escolha == 3) {
-			Clientes.deletarDados(Principal.connection);
-		} else if (escolha == 4) {
-			
-		} else {
-			System.out.println("DIGITE UM VALOR VALIDO");
-		}
-		}
-	}
+public class Clientes {
+
+
 
 public static void consultarDadosclientes(Connection connection) {
 	try {	
@@ -143,4 +124,32 @@ public static void consultarDadosclientes(Connection connection) {
 					
 		}
 		}
+	
+	public static void exibirDetalhesCliente(Connection connection, int idCliente) {
+        String query = "SELECT idclientes, nomecliente, emailcliente, telcliente FROM Clientes WHERE idclientes = ?";
+        
+        try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            preparedStatement.setInt(1, idCliente);
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            if (resultSet.next()) {
+                int id = resultSet.getInt("idclientes");
+                String nome = resultSet.getString("nomecliente");
+                String email = resultSet.getString("emailcliente");
+                String telefone = resultSet.getString("telcliente");
+
+                System.out.println("Detalhes do Cliente:");
+                System.out.println("ID: " + id);
+                System.out.println("Nome: " + nome);
+                System.out.println("Email: " + email);
+                System.out.println("Telefone: " + telefone);
+            } else {
+                System.out.println("Cliente não encontrado.");
+            }
+        } catch (SQLException e) {
+            System.out.println("Erro ao buscar detalhes do cliente: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
 }

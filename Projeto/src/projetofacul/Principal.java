@@ -2,77 +2,152 @@ package projetofacul;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.Scanner;
 
-public class Principal 
-{
-	public static Connection connection;
+public class Principal {
+    public static void main(String[] args) {
+        String jdbcUrl = "jdbc:sqlite:/C:\\Users\\cauem\\eclipse-workspace\\Projeto\\BDHOTEL.db";
 
-	public static void main(String[] args) {
-// 0 - adicionar o arquivo .jar	da biblioteca SQLite JDBC
-		// 1 - identificar qual que é o caminho do arquivo de banco de dados
-			String jdbcUrl = "jdbc:sqlite:/C:\\Users\\cauem\\eclipse-workspace\\Projeto\\BDHOTEL.db";
-			
-	try {
-		// 2 - conectar com o banco de dados
-		Connection connection = DriverManager.getConnection(jdbcUrl);
-		while (true) {
-			Scanner scanner = new Scanner(System.in); // criar um objeto da classe Scanner
-			System.out.println("------------------------------");
-			System.out.println("BANCO DE DADOS HOTEL");
-			System.out.println("------------------------------");
-			System.out.println("[1] Clientes\n[2] Quartos\n[3] Reservas\n[4] Serviços" );
-			while (true) { 
-				int escolhatabela = scanner.nextInt();
-				if (escolhatabela == 1) {
-					System.out.println("TABELA CLIENTES");
-					System.out.println("------------------------------");
-					System.out.println("[1] Consultar Dados\n[2] Inserir Dados\n[3] Deletar Dados\n[4] Atualizar Dados\n [5] Voltar" );
-					int escolha = scanner.nextInt();
-					if (escolha == 1) {
-						Clientes.consultarDadosclientes(connection);
-					} else if (escolha == 2) {
-						Clientes.cadastrarDados(connection);
-					} else if (escolha == 3) {
-						Clientes.deletarDados(connection);
-					} else if (escolha == 4) {
-						Clientes.atualizarDados(connection);
-					} else if (escolha == 5) {
-						break;
-					} else {
-						System.out.println("DIGITE UM VALOR VALIDO");
-					}
+        try {
+            Connection connection = DriverManager.getConnection(jdbcUrl);
+            Scanner scanner = new Scanner(System.in);
 
-			}
-			}
-			System.out.println("[1] Consultar Dados\n[2] Inserir Dados\n[3] Deletar Dados\n[4] Finalizar programa" );
-			System.out.println("------------------------------");
+            while (true) {
+                System.out.println("------------------------------");
+                System.out.println("BANCO DE DADOS HOTEL");
+                System.out.println("------------------------------");
+                System.out.println("[1] Clientes\n[2] Quartos\n[3] Reservas\n[4] Serviços\n[5] Encerrar Programa");
+                int escolhaTabela = scanner.nextInt();
 
-			int escolha = scanner.nextInt();
-			if (escolha == 1) {
-			} else if (escolha == 2) {
-				Clientes.cadastrarDados(connection);
-			} else if (escolha == 3) {
-				Clientes.deletarDados(connection);
-			} else if (escolha == 4) {
-				break ;
-			} else {
-				System.out.println("DIGITE UM VALOR VALIDO");
-			}
-			
-		}
-	}  catch (SQLException e) {
-		System.out.println("ERRO" + e);
-		e.printStackTrace();
-		}
-}
-	
-	
-	
-	
-		
+                switch (escolhaTabela) {
+                case 1:
+                    menuClientes(connection);
+                    break;
+                case 2:
+                    menuQuartos(connection);
+                    break;
+                case 3:
+                    menuReservas(connection);
+                    break;
+                case 4:
+                    menuServicos(connection);
+                    break;
+                case 5:
+                    System.out.println("Encerrando o programa.");
+                    System.exit(0); // Encerra o programa
+                default:
+                    System.out.println("Opção inválida. Tente novamente.");
+                    break;
+            }
+        }
+        } catch (SQLException e) {
+            System.out.println("ERRO: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    public static void menuClientes(Connection connection) {
+        Scanner scanner = new Scanner(System.in);
+
+        while (true) {
+            System.out.println("TABELA CLIENTES");
+            System.out.println("------------------------------");
+            System.out.println("[1] Consultar Dados\n[2] Inserir Dados\n[3] Deletar Dados\n[4] Atualizar Dados\n[5] Detalhes do Cliente\n[6] Voltar");
+            int escolha = scanner.nextInt();
+
+            switch (escolha) {
+                case 1:
+                    Clientes.consultarDadosclientes(connection);
+                    break;
+                case 2:
+                    Clientes.cadastrarDados(connection);
+                    break;
+                case 3:
+                    Clientes.deletarDados(connection);
+                    break;
+                case 4:
+                    Clientes.atualizarDados(connection);
+                    break;
+                case 5:
+                    System.out.println("Digite o ID do Cliente:");
+                    int idCliente = scanner.nextInt();
+                    Clientes.exibirDetalhesCliente(connection, idCliente);
+                    break;
+                case 6:
+                    return; // Retorna ao menu principal
+                default:
+                    System.out.println("Opção inválida. Tente novamente.");
+                    break;
+            }
+        }
+    }
+
+    public static void menuQuartos(Connection connection) {
+    	Scanner scanner = new Scanner(System.in);
+
+        while (true) {
+            System.out.println("TABELA QUARTOS");
+            System.out.println("------------------------------");
+            System.out.println("[1] Consultar Dados\n[2] Cadastrar Dados\n[3] Detalhes do Quarto\n[4] Voltar");
+            int escolha = scanner.nextInt();
+
+            switch (escolha) {
+                case 1:
+                    Quartos.consultarDadosQuartos(connection);
+                    break;
+                case 2:
+                    Quartos.cadastrarDadosQuarto(connection);
+                    break;
+       
+                case 3:
+                    System.out.println("Digite o ID do Quarto:");
+                    int idCliente = scanner.nextInt();
+                    Quartos.exibirDetalhesQuarto(connection, idCliente);
+                    break;
+                case 4:
+                    return; // Retorna ao menu principal
+                default:
+                    System.out.println("Opção inválida. Tente novamente.");
+                    break;
+            }
+        }
+    }
+
+    public static void menuReservas(Connection connection) {
+        Scanner scanner = new Scanner(System.in);
+
+        while (true) {
+            System.out.println("TABELA RESERVAS");
+            System.out.println("------------------------------");
+            System.out.println("[1] Consultar Reservas\n[2] Cadastrar Reserva\n[3] Atualizar Reserva\n[4] Remover Reserva\n[5] Calcular otal Reserva");
+            int escolha = scanner.nextInt();
+
+            switch (escolha) {
+                case 1:
+                    Reservas.consultarDadosReservas(connection);
+                    break;
+                case 2:
+                    Reservas.cadastrarReserva(connection);
+                    break;
+                case 3:
+                    Reservas.atualizarReserva(connection);
+                    break;
+                case 4:
+                    Reservas.deletarReserva(connection);
+                    break;
+                case 5:
+                    return; // Retorna ao menu principal
+                default:
+                    System.out.println("Opção inválida. Tente novamente.");
+                    break;
+            }
+        }
+    }
+
+    
+
+    public static void menuServicos(Connection connection) {
+        // Implemente o menu para a tabela "Serviços" aqui
+    }
 }

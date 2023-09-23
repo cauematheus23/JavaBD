@@ -8,104 +8,97 @@ import java.sql.Statement;
 import java.util.Scanner;
 
 public class Quartos {
-	public static void consultarDadosclientes(Connection connection) {
-		try {	
-			// 3 - definir a query SQL
-			String sql = "SELECT * from clientes";
-			// 4 - abrir a conexão com o banco de dados 
-			Statement statement = connection.createStatement();
-			// 5 - executar a query
-			ResultSet result = statement.executeQuery(sql);
-			// 6 - acessar e exibir o resultado
-			System.out.println("---------------------------");
-			System.out.println("| ID | NOME | Email | Telefone |");
-			System.out.println("---------------------------");
-			while(result.next()) 
-		{ String idclientes = result.getString("idclientes");
-				String nomecliente = result.getString("nomecliente");
-				String emailcliente = result.getString("emailcliente");
-				String telcliente = result.getString("telcliente");
+    // Métodos para a tabela "Quartos"...
 
+    public static void consultarDadosQuartos(Connection connection) {
+        try {
+            String sql = "SELECT * FROM quartos";
+            Statement statement = connection.createStatement();
+            ResultSet result = statement.executeQuery(sql);
 
-			    System.out.printf("| %-4d | %-10s | %-15s | %-10s |\n", idclientes, nomecliente, emailcliente, telcliente);
-		}
-			System.out.println("----------------------");
+            System.out.println("---------------------------------------------------------------------------------");
+            System.out.println("|                                    QUARTOS                                    |");
+            System.out.println("---------------------------------------------------------------------------------");
+            System.out.printf("| %-3s | %-15s | %-10s | %-15s |\n", "ID", "TIPO", "DIÁRIA", "DISPONIBILIDADE");
+            System.out.println("---------------------------------------------------------------------------------");
 
-			}	catch (SQLException e) 
-				{	System.out.println("ERRO" + e);
-				e.printStackTrace();
-				}
-		
-		}
-		
-		public static void cadastrarDados(Connection connection) {
-			Scanner scanner = new Scanner(System.in); // criar um objeto da classe Scanner
-			System.out.println("Informe o ID(inteiro e unico) da pessoa que deseja inserir no bd:  ");
-			int idclientes = scanner.nextInt();
-			scanner.nextLine();
-			System.out.println("Informe o nome do cliente que deseja inserir no bd:  ");
-			String nomecliente = scanner.nextLine();
-			System.out.println("Informe o email do cliente que deseja inserir no bd:  ");
-			String emailcliente = scanner.nextLine();
-			System.out.println("Informe o Telefone do cliente que deseja inserir no bd:  ");
-			String telcliente = scanner.nextLine();
-			String sql = "INSERT INTO clientes (idclientes,nomecliente,emailcliente,telcliente) VALUES (?, ?, ?, ?)";
-			try {
-				PreparedStatement preparedStatement = connection.prepareStatement(sql);
-				preparedStatement.setInt(1,idclientes);
-				preparedStatement.setString(2, nomecliente);
-				preparedStatement.setString(3, emailcliente);
-				preparedStatement.setString(4, telcliente);
-				int rowsAffected = preparedStatement.executeUpdate();
-				if (rowsAffected > 0) {
-					System.out.println("Registro inserido com sucesso!");
-				} else {
-					System.out.println("Falha ao inserir o registro");
-				}
-			}catch (SQLException e) {
-				System.out.println("Erro ao inserir dados: " + e.getMessage());
-			}
-	}
-		public static void atualizarDados(Connection connection) {
-			Scanner scanner = new Scanner(System.in);
-			System.out.println("Digite o ID (inteiro) da pessoa que o nome vai ser atualizado: ");
-			int id = scanner.nextInt();
-			scanner.nextLine();
-			System.out.println("Digite o novo nome da pessoa: ");
-			String novonome = scanner.nextLine();
-			String sql = "UPDATE pessoas SET nome = ? WHERE id = ?";
-			try {
-				PreparedStatement preparedStatement = connection.prepareStatement(sql);
-				preparedStatement.setString(1, novonome);
-				preparedStatement.setInt(2, id);
-				int rowsAffected = preparedStatement.executeUpdate();
-				if(rowsAffected > 0) {
-					System.out.println("Registro atualizado com sucesso");
-				} else {
-					System.out.println("Nenhum registro foi atualizado. Verifique o ID informado.");
-				}
-			}	catch(SQLException e) {
-				System.out.println("Erro ao atualizar registro: " + e.getMessage());
-						
-			}
-			}
-		public static void deletarDados(Connection connection) {
-			Scanner scanner = new Scanner(System.in);
-			System.out.println("Digite o ID (inteiro) da pessoa que deseja deletar do banco: ");
-			int idcliente = scanner.nextInt();
-			String sql = "DELETE FROM clientes WHERE idclientes = ?";
-			try {
-				PreparedStatement preparedStatement = connection.prepareStatement(sql);
-				preparedStatement.setInt(1, idcliente);
-				int rowsAffected = preparedStatement.executeUpdate();
-				if(rowsAffected > 0) {
-					System.out.println("Registro deletado com sucesso");
-				} else {
-					System.out.println("Nenhum registro encontrado. Verifique o ID informado.");
-				}
-			}	catch(SQLException e) {
-				System.out.println("Erro ao deletar registro: " + e.getMessage());
-						
-			}
-			}
+            while (result.next()) {
+                int idQuarto = result.getInt("idquarto");
+                String tipoQuarto = result.getString("tipoquarto");
+                double diaria = result.getDouble("diaria");
+                boolean disponibilidade = result.getBoolean("disponibilidade");
+
+                System.out.printf("| %-3d | %-15s | %-10.2f | %-15s |\n", idQuarto, tipoQuarto, diaria, disponibilidade ? "Disponível" : "Indisponível");
+            }
+
+            System.out.println("---------------------------------------------------------------------------------");
+        } catch (SQLException e) {
+            System.out.println("ERRO: " + e);
+            e.printStackTrace();
+        }
+    }
+
+    public static void cadastrarDadosQuarto(Connection connection) {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Informe o ID (inteiro e único) do quarto que deseja inserir no banco: ");
+        int idQuarto = scanner.nextInt();
+        scanner.nextLine();
+        System.out.println("Informe o tipo de quarto: ");
+        String tipoQuarto = scanner.nextLine();
+        System.out.println("Informe a diária: ");
+        double diaria = scanner.nextDouble();
+        scanner.nextLine();
+        System.out.println("Informe a disponibilidade (True para disponivel ou false para indisponivel): ");
+        boolean disponibilidade = scanner.nextBoolean();
+
+        String sql = "INSERT INTO quartos (idquarto, tipoquarto, diaria, disponibilidade) VALUES (?, ?, ?, ?)";
+
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setInt(1, idQuarto);
+            preparedStatement.setString(2, tipoQuarto);
+            preparedStatement.setDouble(3, diaria);
+            preparedStatement.setBoolean(4, disponibilidade);
+
+            int rowsAffected = preparedStatement.executeUpdate();
+
+            if (rowsAffected > 0) {
+                System.out.println("Registro inserido com sucesso!");
+            } else {
+                System.out.println("Falha ao inserir o registro");
+            }
+        } catch (SQLException e) {
+            System.out.println("Erro ao inserir dados: " + e.getMessage());
+        }
+    }
+
+    // Outros métodos para atualizar e deletar quartos...
+
+    public static void exibirDetalhesQuarto(Connection connection, int idQuarto) {
+        String query = "SELECT idquarto, tipoquarto, diaria, disponibilidade FROM quartos WHERE idquarto = ?";
+
+        try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            preparedStatement.setInt(1, idQuarto);
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            if (resultSet.next()) {
+                int id = resultSet.getInt("idquarto");
+                String tipoQuarto = resultSet.getString("tipoquarto");
+                double diaria = resultSet.getDouble("diaria");
+                boolean disponibilidade = resultSet.getBoolean("disponibilidade");
+
+                System.out.println("Detalhes do Quarto:");
+                System.out.println("ID: " + id);
+                System.out.println("Tipo: " + tipoQuarto);
+                System.out.println("Diária: " + diaria);
+                System.out.println("Disponibilidade: " + (disponibilidade ? "Disponível" : "Indisponível"));
+            } else {
+                System.out.println("Quarto não encontrado.");
+            }
+        } catch (SQLException e) {
+            System.out.println("Erro ao buscar detalhes do quarto: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
 }
