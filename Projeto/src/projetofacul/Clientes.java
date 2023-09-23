@@ -39,19 +39,22 @@ public static void consultarDadosclientes(Connection connection) {
 		// 5 - executar a query
 		ResultSet result = statement.executeQuery(sql);
 		// 6 - acessar e exibir o resultado
-		System.out.println("---------------------------");
-		System.out.println("| ID | NOME | Email | Telefone |");
-		System.out.println("---------------------------");
+		System.out.println("---------------------------------------------------------------------------------");
+    	System.out.println("|                                   CLIENTES                                    |");
+        System.out.println("---------------------------------------------------------------------------------");
+        System.out.printf("| %-3s | %-20s | %-30s | %-15s |\n", "ID", "NOME", "EMAIL", "TELEFONE");
+        System.out.println("---------------------------------------------------------------------------------");
 		while(result.next()) 
 	{ String idclientes = result.getString("idclientes");
 			String nomecliente = result.getString("nomecliente");
 			String emailcliente = result.getString("emailcliente");
 			String telcliente = result.getString("telcliente");
 
+			System.out.printf("| %-3s | %-20s | %-30s | %-15s |\n", idclientes, nomecliente, emailcliente, telcliente);
 
-		    System.out.printf("| %-4d | %-10s | %-15s | %-10s |\n", idclientes, nomecliente, emailcliente, telcliente);
 	}
-		System.out.println("----------------------");
+		System.out.println("---------------------------------------------------------------------------------");
+
 
 		}	catch (SQLException e) 
 			{	System.out.println("ERRO" + e);
@@ -89,28 +92,38 @@ public static void consultarDadosclientes(Connection connection) {
 		}
 }
 	public static void atualizarDados(Connection connection) {
-		Scanner scanner = new Scanner(System.in);
-		System.out.println("Digite o ID (inteiro) da pessoa que o nome vai ser atualizado: ");
-		int id = scanner.nextInt();
-		scanner.nextLine();
-		System.out.println("Digite o novo nome da pessoa: ");
-		String novonome = scanner.nextLine();
-		String sql = "UPDATE pessoas SET nome = ? WHERE id = ?";
-		try {
-			PreparedStatement preparedStatement = connection.prepareStatement(sql);
-			preparedStatement.setString(1, novonome);
-			preparedStatement.setInt(2, id);
-			int rowsAffected = preparedStatement.executeUpdate();
-			if(rowsAffected > 0) {
-				System.out.println("Registro atualizado com sucesso");
-			} else {
-				System.out.println("Nenhum registro foi atualizado. Verifique o ID informado.");
-			}
-		}	catch(SQLException e) {
-			System.out.println("Erro ao atualizar registro: " + e.getMessage());
-					
-		}
-		}
+	    Scanner scanner = new Scanner(System.in);
+	    System.out.println("Digite o ID (inteiro) da pessoa que deseja atualizar: ");
+	    int id = scanner.nextInt();
+	    scanner.nextLine(); // Consuma a quebra de linha
+	    System.out.println("Digite o novo nome da pessoa: ");
+	    String novoNome = scanner.nextLine();
+	    System.out.println("Digite o novo email da pessoa: ");
+	    String novoEmail = scanner.nextLine();
+	    System.out.println("Digite o novo telefone da pessoa: ");
+	    String novoTelefone = scanner.nextLine();
+
+	    String sql = "UPDATE clientes SET nomecliente = ?, emailcliente = ?, telcliente = ? WHERE idclientes = ?";
+
+	    try {
+	        PreparedStatement preparedStatement = connection.prepareStatement(sql);
+	        preparedStatement.setString(1, novoNome);
+	        preparedStatement.setString(2, novoEmail);
+	        preparedStatement.setString(3, novoTelefone);
+	        preparedStatement.setInt(4, id);
+
+	        int rowsAffected = preparedStatement.executeUpdate();
+
+	        if (rowsAffected > 0) {
+	            System.out.println("Registro atualizado com sucesso");
+	        } else {
+	            System.out.println("Nenhum registro foi atualizado. Verifique o ID informado.");
+	        }
+	    } catch (SQLException e) {
+	        System.out.println("Erro ao atualizar registro: " + e.getMessage());
+	    }
+	}
+
 	public static void deletarDados(Connection connection) {
 		Scanner scanner = new Scanner(System.in);
 		System.out.println("Digite o ID (inteiro) da pessoa que deseja deletar do banco: ");

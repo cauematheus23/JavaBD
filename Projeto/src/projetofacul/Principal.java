@@ -31,7 +31,7 @@ public class Principal
 				if (escolhatabela == 1) {
 					System.out.println("TABELA CLIENTES");
 					System.out.println("------------------------------");
-					System.out.println("[1] Consultar Dados\n[2] Inserir Dados\n[3] Deletar Dados\n[4] Finalizar programa" );
+					System.out.println("[1] Consultar Dados\n[2] Inserir Dados\n[3] Deletar Dados\n[4] Atualizar Dados\n [5] Voltar" );
 					int escolha = scanner.nextInt();
 					if (escolha == 1) {
 						Clientes.consultarDadosclientes(connection);
@@ -40,7 +40,9 @@ public class Principal
 					} else if (escolha == 3) {
 						Clientes.deletarDados(connection);
 					} else if (escolha == 4) {
-						break ;
+						Clientes.atualizarDados(connection);
+					} else if (escolha == 5) {
+						break;
 					} else {
 						System.out.println("DIGITE UM VALOR VALIDO");
 					}
